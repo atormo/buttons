@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "description": "Open source button builder. Design custom buttons, copy CSS or Tailwind, and export SVG or PNG.",
+  "description": "A button builder. Copy CSS or Tailwind, export SVG and PNG.",
   "homepage": "https://buttons.tormo.at",
   "bugs": {
     "url": "https://github.com/atormo/buttons.tormo.at/issues"
