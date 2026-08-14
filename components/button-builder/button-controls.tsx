@@ -436,7 +436,7 @@ export function ButtonControls({
 
   return (
     <section
-      className="overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
+      className={cn("overflow-hidden", styles.panel)}
       aria-labelledby="button-controls-title"
     >
       <div className="px-5 pb-3 pt-4">

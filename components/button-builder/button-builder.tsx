@@ -203,7 +203,10 @@ function ButtonOutputSection({
         onValueChange={(value) =>
           onOutputFormatChange(value as OutputFormat)
         }
-        className="flex min-w-0 flex-col overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
+        className={cn(
+          "flex min-w-0 flex-col overflow-hidden",
+          styles.panel,
+        )}
       >
         <div className="flex items-center justify-between gap-3 border-b border-neutral-100 px-2 py-2 dark:border-neutral-800">
           <Tabs.List
@@ -239,7 +242,10 @@ function ButtonOutputSection({
       </Tabs.Root>
 
       <section
-        className="flex min-w-0 flex-col rounded-2xl p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.1)] lg:aspect-square dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
+        className={cn(
+          "flex min-w-0 flex-col p-5 lg:aspect-square",
+          styles.panel,
+        )}
         aria-labelledby="button-export-title"
       >
         <h3
@@ -754,7 +760,8 @@ export function ButtonBuilder() {
                 aria-label="Button canvas"
                 aria-describedby="button-preview-instructions"
                 className={cn(
-                  "relative flex min-h-[30rem] items-center justify-center overflow-hidden rounded-2xl bg-neutral-50 p-8 lg:absolute lg:inset-0 lg:min-h-0 dark:bg-neutral-800",
+                  "relative flex min-h-[30rem] items-center justify-center overflow-hidden bg-neutral-50 p-8 lg:absolute lg:inset-0 lg:min-h-0 dark:bg-neutral-800",
+                  styles.panel,
                   styles.dotGrid,
                 )}
               >

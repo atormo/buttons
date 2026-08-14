@@ -73,6 +73,15 @@
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08);
 }
 
+.panel {
+  border-radius: 1rem;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.1);
+}
+
+:global(.dark) .panel {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
 .dotGrid {
   background-image: radial-gradient(
     circle,
