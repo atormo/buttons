@@ -269,7 +269,7 @@ function ButtonOutputSection({
               aria-hidden
             />
           </button>
-          <div className="grid grid-cols-[minmax(0,1fr)_5rem] overflow-hidden rounded-xl shadow-[0_0_0_1px_rgba(0,0,0,0.1)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]">
+          <div className="grid grid-cols-[minmax(0,1fr)_5rem] overflow-hidden rounded-xl shadow-[0_0_0_1px_rgba(0,0,0,0.1)] has-[select:focus-visible]:outline-2 has-[select:focus-visible]:outline-offset-2 has-[select:focus-visible]:outline-neutral-500 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)] dark:has-[select:focus-visible]:outline-neutral-300">
             <button
               type="button"
               onClick={() => void exportPng(config, pngScale)}
@@ -293,7 +293,7 @@ function ButtonOutputSection({
                     Number(event.target.value) as PngExportScale,
                   )
                 }
-                className="min-h-12 w-full appearance-none bg-transparent pl-4 pr-8 font-mono text-xs tabular-nums outline-none transition-colors duration-150 hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-500 dark:hover:bg-neutral-900 dark:focus-visible:ring-neutral-300"
+                className="min-h-12 w-full appearance-none bg-transparent pl-4 pr-8 font-mono text-xs tabular-nums outline-none transition-colors duration-150 hover:bg-neutral-50 dark:hover:bg-neutral-900"
               >
                 {PNG_EXPORT_SCALES.map((scale) => (
                   <option key={scale} value={scale}>
