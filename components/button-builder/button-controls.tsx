@@ -436,7 +436,10 @@ export function ButtonControls({
 
   return (
     <section
-      className={cn("overflow-hidden", styles.panel)}
+      className={cn(
+        "overflow-hidden lg:flex lg:h-full lg:flex-col",
+        styles.panel,
+      )}
       aria-labelledby="button-controls-title"
     >
       <div className="px-5 pb-3 pt-4">
@@ -448,7 +451,10 @@ export function ButtonControls({
         </h2>
       </div>
 
-      <Tabs.Root defaultValue="basic">
+      <Tabs.Root
+        defaultValue="basic"
+        className="lg:flex lg:min-h-0 lg:flex-1 lg:flex-col"
+      >
         <Tabs.List
           className="mx-3 grid grid-cols-5 rounded-xl bg-neutral-50 p-1 dark:bg-neutral-900"
           aria-label="Button settings"
@@ -464,7 +470,7 @@ export function ButtonControls({
           ))}
         </Tabs.List>
 
-        <div className="min-h-[22rem]">
+        <div className="min-h-[22rem] lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain">
           <Tabs.Panel
             value="basic"
             className="p-5 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-500 dark:focus-visible:ring-neutral-300"

@@ -683,24 +683,11 @@ export function ButtonBuilder() {
         }
       >
         <div className="mx-auto w-full max-w-7xl">
-          <header className="flex items-start justify-between gap-6">
+          <header className="flex items-center justify-between gap-6">
             <div className="min-w-0">
               <h1 className="text-balance text-3xl font-medium sm:text-4xl">
                 Buttons
               </h1>
-              <p className="mt-3 max-w-2xl text-pretty text-sm text-neutral-500 dark:text-neutral-400">
-                Welcome. This is Buttons, but if you were looking for{" "}
-                <a
-                  href="https://tonsofbutts.absurd.farm"
-                  className="rounded-sm text-neutral-950 outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 dark:text-white dark:focus-visible:ring-neutral-300 dark:focus-visible:ring-offset-neutral-950"
-                >
-                  Tons of butts is{" "}
-                  <span className="underline decoration-neutral-950 underline-offset-4 dark:decoration-white">
-                    here
-                  </span>
-                </a>
-                .
-              </p>
             </div>
 
             <div className="flex shrink-0 items-center">
@@ -739,7 +726,9 @@ export function ButtonBuilder() {
             </div>
           </header>
 
-          <div className="mt-8 grid min-w-0 grid-cols-[minmax(0,1fr)] items-start gap-8 [overflow-anchor:none] lg:grid-cols-[minmax(0,1fr)_22rem]">
+          {/* Desktop: a viewport-tall workspace. The canvas stays put while
+              the controls scroll inside their own panel. */}
+          <div className="mt-8 grid min-w-0 grid-cols-[minmax(0,1fr)] items-start gap-8 [overflow-anchor:none] lg:h-[calc(100dvh-10rem)] lg:min-h-[36rem] lg:grid-cols-[minmax(0,1fr)_22rem]">
             <section
               className="relative min-h-[30rem] min-w-0 self-stretch lg:min-h-0"
               aria-labelledby="button-preview-title"
@@ -947,7 +936,7 @@ export function ButtonBuilder() {
               </div>
             </section>
 
-            <aside className="min-w-0 lg:col-start-2 lg:row-start-1">
+            <aside className="min-w-0 lg:col-start-2 lg:row-start-1 lg:h-full lg:min-h-0">
               <ButtonControls
                 config={config}
                 update={update}
