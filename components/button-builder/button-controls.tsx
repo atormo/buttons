@@ -441,6 +441,7 @@ export function ButtonControls({
         styles.panel,
       )}
       aria-labelledby="button-controls-title"
+      data-color-picker-bounds
     >
       <div className="px-5 pb-3 pt-4">
         <h2
@@ -470,7 +471,10 @@ export function ButtonControls({
           ))}
         </Tabs.List>
 
-        <div className="min-h-[22rem] lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain">
+        <div
+          data-color-picker-portal
+          className="relative min-h-[22rem] lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain"
+        >
           <Tabs.Panel
             value="basic"
             className="p-5 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-500 dark:focus-visible:ring-neutral-300"

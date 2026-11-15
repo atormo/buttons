@@ -2,7 +2,7 @@
 
 import { Popover } from "@base-ui/react/popover";
 import { type Oklch } from "culori";
-import { useId, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Check } from "pixelarticons/react/Check";
 import { LetterXCircle } from "pixelarticons/react/LetterXCircle";
 import { cn } from "@/lib/utils";
@@ -55,6 +55,44 @@ export function OklchColorPicker({
   onChange,
 }: OklchColorPickerProps) {
   const labelId = useId();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+
+  // Scrolling the controls dismisses the picker instead of dragging it along.
+  useEffect(() => {
+    if (!open) return;
+    const scroller = triggerRef.current?.closest<HTMLElement>(
+      "[data-color-picker-portal]",
+    );
+    const close = () => setOpen(false);
+    scroller?.addEventListener("scroll", close, { passive: true });
+    window.addEventListener("scroll", close, { passive: true });
+    return () => {
+      scroller?.removeEventListener("scroll", close);
+      window.removeEventListener("scroll", close);
+    };
+  }, [open]);
+  // Anchor the popup to the controls panel horizontally (so it sits centered
+  // with equal margins) and to the trigger vertically (so it opens next to it).
+  const getAnchor = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return null;
+    const bounds = trigger.closest<HTMLElement>("[data-color-picker-bounds]");
+    if (!bounds) return trigger;
+    return {
+      contextElement: trigger,
+      getBoundingClientRect() {
+        const t = trigger.getBoundingClientRect();
+        const b = bounds.getBoundingClientRect();
+        return DOMRect.fromRect({
+          x: b.left,
+          y: t.top,
+          width: b.width,
+          height: t.height,
+        });
+      },
+    };
+  }, []);
   const valueId = useId();
   const lightnessId = useId();
   const chromaId = useId();
@@ -93,8 +131,9 @@ export function OklchColorPicker({
         {label}
       </span>
 
-      <Popover.Root>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger
+          ref={triggerRef}
           disabled={disabled}
           aria-labelledby={`${labelId} ${valueId}`}
           className={cn(
@@ -124,12 +163,13 @@ export function OklchColorPicker({
 
         <Popover.Portal>
           <Popover.Positioner
+            anchor={getAnchor}
             sideOffset={8}
-            align="end"
+            align="center"
             collisionPadding={12}
             className="z-50"
           >
-            <Popover.Popup className="w-[19rem] max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white p-4 text-neutral-950 shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_12px_32px_rgba(0,0,0,0.14)] outline-none dark:bg-neutral-950 dark:text-white dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_16px_40px_rgba(0,0,0,0.5)]">
+            <Popover.Popup className="w-[min(calc(var(--anchor-width)-2.5rem),22rem)] max-w-[calc(100vw-1.5rem)] origin-[var(--transform-origin)] rounded-2xl transition-[transform,opacity] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[ending-style]:scale-[0.97] data-[ending-style]:opacity-0 data-[ending-style]:duration-150 data-[starting-style]:scale-[0.97] data-[starting-style]:opacity-0 motion-reduce:transition-opacity motion-reduce:data-[starting-style]:scale-100 motion-reduce:data-[ending-style]:scale-100 bg-white p-4 text-neutral-950 shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_12px_32px_rgba(0,0,0,0.14)] outline-none dark:bg-neutral-950 dark:text-white dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_16px_40px_rgba(0,0,0,0.5)]">
               <div className="flex items-center justify-between gap-4">
                 <Popover.Title className="text-balance text-sm font-medium">
                   {label}
