@@ -38,8 +38,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: inherit;
+@layer base {
+  a {
+    color: inherit;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

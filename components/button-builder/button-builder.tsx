@@ -34,6 +34,12 @@ import {
 } from "./button-color-utils";
 import { ButtonControls } from "./button-controls";
 import {
+  CANVAS_BACKGROUND,
+  formatRatio,
+  getButtonContrast,
+  type ContrastResult,
+} from "./button-contrast";
+import {
   DEFAULT_CONFIG,
   getEffectiveIconColor,
   hasIcon,
@@ -243,7 +249,7 @@ function ButtonOutputSection({
 
       <section
         className={cn(
-          "flex min-w-0 flex-col p-5 lg:aspect-square",
+          "relative flex min-w-0 flex-col overflow-hidden p-5 lg:aspect-square",
           styles.panel,
         )}
         aria-labelledby="button-export-title"
@@ -309,19 +315,80 @@ function ButtonOutputSection({
           </div>
         </div>
 
-        <footer className="mt-auto pt-8 text-sm text-neutral-400 dark:text-neutral-500">
-          Created by{" "}
+        <footer className="mt-auto flex justify-center pt-12">
+          {/* Blue wash rising from the card's bottom edge, fading out a bit
+              below the middle so it melts into the panel fill. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-blue-100 via-blue-50/60 to-transparent lg:h-[42%] dark:from-blue-500/20 dark:via-blue-500/5"
+          />
           <a
             href="https://tormo.at"
-            className="rounded-sm text-neutral-600 underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-neutral-500 dark:text-neutral-300 dark:focus-visible:ring-neutral-300"
+            aria-label="Created by tormo.at"
+            title="Created by tormo.at"
+            className="relative rounded-sm p-1.5 text-neutral-950 outline-none transition-[color,transform] duration-150 ease-out hover:text-neutral-700 focus-visible:ring-2 focus-visible:ring-neutral-500 active:scale-[0.97] dark:text-white dark:hover:text-neutral-300 dark:focus-visible:ring-neutral-300"
           >
-            tormo.at
+            <span
+              aria-hidden
+              className="block h-4 aspect-[1230/256] bg-current [image-rendering:pixelated]"
+              style={WORDMARK_MASK}
+            />
           </a>
         </footer>
       </section>
     </section>
   );
 }
+
+function ContrastItem({
+  label,
+  result,
+  thresholds,
+}: {
+  label: string;
+  result: ContrastResult;
+  thresholds: string;
+}) {
+  const passes = result.level !== "Fail";
+  const ratio = formatRatio(result.ratio);
+
+  return (
+    <div
+      className="flex min-h-10 items-center gap-2 px-3"
+      title={`${label} ${ratio} against the fill. ${thresholds}`}
+      aria-label={`${label} contrast ${ratio}, ${passes ? `passes WCAG ${result.level}` : "fails WCAG"}`}
+      role="img"
+    >
+      <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        {label}
+      </span>
+      <span className="hidden font-mono text-xs tabular-nums sm:inline">
+        {ratio}
+      </span>
+      <span
+        className={cn(
+          "rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none",
+          passes
+            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300"
+            : "bg-red-100 text-red-700 dark:bg-red-400/15 dark:text-red-300",
+        )}
+      >
+        {result.level}
+      </span>
+    </div>
+  );
+}
+
+const WORDMARK_MASK = {
+  WebkitMaskImage: "url('/tormo-wordmark.png')",
+  maskImage: "url('/tormo-wordmark.png')",
+  WebkitMaskSize: "contain",
+  maskSize: "contain",
+  WebkitMaskRepeat: "no-repeat",
+  maskRepeat: "no-repeat",
+  WebkitMaskPosition: "center",
+  maskPosition: "center",
+} as const;
 
 export function ButtonBuilder() {
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -556,6 +623,14 @@ export function ButtonBuilder() {
     config.iconStyle,
   );
   const effectiveIconColor = getEffectiveIconColor(config);
+  const contrast = useMemo(
+    () =>
+      getButtonContrast(
+        config,
+        isDark ? CANVAS_BACKGROUND.dark : CANVAS_BACKGROUND.light,
+      ),
+    [config, isDark],
+  );
 
   const previewStyle = useMemo(
     () => {
@@ -785,6 +860,35 @@ export function ButtonBuilder() {
                   >
                     <ZoomIn className="size-4" aria-hidden />
                   </button>
+                </div>
+
+                <div
+                  className="absolute bottom-4 right-4 z-10 flex items-center rounded-full bg-white p-1 text-neutral-950 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.08)] dark:bg-neutral-950 dark:text-white dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.3)]"
+                  role="group"
+                  aria-label="WCAG contrast check"
+                >
+                  <ContrastItem
+                    label="Text"
+                    result={contrast.text}
+                    thresholds={
+                      contrast.largeText
+                        ? "Large text needs 3:1 for AA and 4.5:1 for AAA."
+                        : "Text needs 4.5:1 for AA and 7:1 for AAA."
+                    }
+                  />
+                  {contrast.icon && (
+                    <>
+                      <span
+                        aria-hidden
+                        className="h-4 w-px bg-neutral-200 dark:bg-neutral-800"
+                      />
+                      <ContrastItem
+                        label="Icon"
+                        result={contrast.icon}
+                        thresholds="Icons need 3:1 for AA."
+                      />
+                    </>
+                  )}
                 </div>
 
                 <motion.span
